@@ -1,0 +1,27 @@
+@url = http://localhost:3001/api
+@json = Content-Type: application/json
+### 查询所有学生
+GET {{url}}/getAllUsers
+{{json}}
+
+### 注册
+POST {{url}}/register
+{{json}}
+
+{
+  "id": "stu2",
+  "password": "123456"
+}
+
+### 登录
+POST {{url}}/login
+{{json}}
+
+{
+  "id": "admin3",
+  "password": "123456"
+}
+
+### 使用token admin3
+GET {{url}}/info
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjNhYjEwZjE2NGRlMjVlNDFhNGVhZSIsImlhdCI6MTY3NjkxNDU4Nn0.cBAKSgAybg9nLbW_YhQzO_P4vUt-ux4JNNgNtXq6fZA
