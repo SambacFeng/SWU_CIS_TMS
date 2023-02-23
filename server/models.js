@@ -20,9 +20,10 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     set(val) {
-      return bcrypt.hashSync(val, 4)
+      return bcrypt.hashSync(String(val), 4)
     }
-  }
+  },
+  role: String
 })
 const User = mongoose.model('User', UserSchema)
 
