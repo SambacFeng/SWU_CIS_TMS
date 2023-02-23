@@ -5,12 +5,18 @@ const cors = require('cors')
 const xlsx = require('node-xlsx')
 const multer = require('multer')
 
+// 处理文件
+const upload = multer()
+
+// 导入密钥
 const { SECRETKEY } = require('./SECRETKEY')
+
+// 导入MongoDB模型
 const { User, Student, Tutor } = require('./models')
-// const { Upload } = require('element-ui')
 
 const app = express()
 app.use(express.json())
+
 // 解决跨域
 app.use(cors())
 app.all("*", (req, res, next) => {
@@ -25,9 +31,6 @@ const auth = async (req, res, next) => {
   req.user = await User.findById(id)
   next()
 }
-
-// 处理文件
-const upload = multer()
 
 app.get('/', async (req, res) => {
   res.send('服务端已运行')
@@ -97,6 +100,13 @@ app.post('/api/login', async (req, res) => {
     user,
     token
   })
+})
+
+// 下载excel模板
+app.get('/api/download/:filename', (req, res) => {
+  const filename = req.params.filename
+  console.log(`收到下载${filename}的请求`)
+  res.download(`./../public/${filename}`)
 })
 
 // 处理excel上传请求
