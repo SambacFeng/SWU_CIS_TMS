@@ -1,5 +1,4 @@
 const express = require('express')
-const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const xlsx = require('node-xlsx')
@@ -27,8 +26,11 @@ app.all("*", (req, res, next) => {
 // express中间件，用于token认证
 const auth = async (req, res, next) => {
   const raw = String(req.headers.authorization).split(' ').pop()
+  console.log('jwt token的值是', raw)
   const { id } = jwt.verify(raw, SECRETKEY)
+  console.log('解码后的用户id是', id)
   req.user = await User.findById(id)
+  console.log('这个用户是', req.user)
   next()
 }
 
@@ -84,7 +86,8 @@ app.post('/api/login', async (req, res) => {
       message: '用户名不存在'
     })
   }
-  const isPasswordValid = bcrypt.compareSync(password, user.password)
+  console.log(id, password, typeof password)
+  const isPasswordValid = user.comparePassword(password)
   if (!isPasswordValid) {
     return res.status(422).send({
       message: '密码错误'
@@ -96,7 +99,7 @@ app.post('/api/login', async (req, res) => {
   const token = jwt.sign({
     id: String(user._id)
   }, SECRETKEY)
-  res.send({
+  return res.send({
     user,
     token
   })
@@ -176,16 +179,29 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
         console.log(err)
         res.status(500).send(err.message)
       }) */
-    res.send('上传成功')
+    return res.send('上传成功')
   } catch (err) {
     console.log(err)
-    res.status(500).send('处理上传文件失败，请检查文件和内容并重试')
+    return res.status(500).send('处理上传文件失败，请检查文件和内容并重试')
   }
 })
 
-// app.post('/api/modify', auth, async(req, res) => {
-
-// })
+app.post('/api/modify', auth, async (req, res) => {
+  const { oldPassword, newPassword } = req.body
+  const { user } = req
+  console.log(req.body)
+  const isOldPasswordValid = user.comparePassword(oldPassword)
+  if (isOldPasswordValid) {
+    console.log('原密码是对的')
+    user.password = newPassword
+    await user.save()
+    
+  } else {
+    console.log('原密码不对')
+    res.status(401).send('修改失败，原密码错误')
+  }
+  return res.send('密码修改成功，下次登录时请使用新密码')
+})
 
 // 需要使用认证的加auth，先执行认证
 app.get('/api/info', auth, async (req, res) => {

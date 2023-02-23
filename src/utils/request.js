@@ -31,4 +31,8 @@ service.interceptors.response.use(
     }
 );
 
+service.interceptors.request.use(config => {
+    config.headers.Authorization = window.localStorage.getItem('token')
+})
+
 export default service;
