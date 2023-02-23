@@ -3,13 +3,15 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const xlsx = require('node-xlsx')
+const multer = require('multer')
 
 const { SECRETKEY } = require('./SECRETKEY')
-const { User } = require('./models')
-const { Upload } = require('element-ui')
+const { User, Student, Tutor } = require('./models')
+// const { Upload } = require('element-ui')
 
 const app = express()
 app.use(express.json())
+// 解决跨域
 app.use(cors())
 app.all("*", (req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*")
@@ -23,6 +25,9 @@ const auth = async (req, res, next) => {
   req.user = await User.findById(id)
   next()
 }
+
+// 处理文件
+const upload = multer()
 
 app.get('/', async (req, res) => {
   res.send('服务端已运行')
@@ -79,11 +84,66 @@ app.post('/api/login', async (req, res) => {
   })
 })
 
-app.post('/api/upload', upload.si)
-
-app.post('/api/modify', auth, async(req, res) => {
-
+app.post('/api/upload', upload.single('file'), async (req, res) => {
+  try {
+    const { file } = req
+    const fileName = file.originalname.split('.').shift()
+    let table = null
+    if (fileName.startsWith('student')) {
+      table = Student
+      console.log('student被上传')
+    } else if (fileName.startsWith('tutor')) {
+      table = Tutor
+      console.log('tutor被上传')
+    }
+    const workbook = xlsx.parse(file.buffer)
+    const worksheet = workbook[0]
+    const data = worksheet.data.slice(1)
+    // 第一行作为键名
+    const keys = data.shift()
+    // console.log(data)
+    const records = data.map((row) => {
+      const record = {}
+      row.forEach((cell, index) => {
+        if (fileName === 'tutor' && keys[index] == 'major') {
+          cell = cell.split(',')
+        }
+        record[keys[index]] = cell
+      })
+      // console.log(record)
+      table.findOne({ id: record.id }, (err, res) => {
+        if (err) {
+          console.log(err)
+        } else if (res) {
+          console.warn(record.name, '的数据已存在')
+        } else {
+          table.create(record, (err, res) => {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log(record.name, '的数据写入成功', res)
+            }
+          })
+        }
+      })
+      return record
+    })
+    /* Student.insertMany(records).then(() => {
+        res.send('上传成功')
+      }).catch(err => {
+        console.log(err)
+        res.status(500).send(err.message)
+      }) */
+    res.send('上传成功')
+  } catch (err) {
+    console.log(err)
+    res.status(500).send('处理上传文件失败，请检查文件和内容并重试')
+  }
 })
+
+// app.post('/api/modify', auth, async(req, res) => {
+
+// })
 
 // 需要使用认证的加auth，先执行认证
 app.get('/api/info', auth, async (req, res) => {
