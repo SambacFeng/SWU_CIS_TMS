@@ -24,4 +24,17 @@ POST {{url}}/login
 
 ### 使用token admin3
 GET {{url}}/info
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjNhYjEwZjE2NGRlMjVlNDFhNGVhZSIsImlhdCI6MTY3NjkxNDU4Nn0.cBAKSgAybg9nLbW_YhQzO_P4vUt-ux4JNNgNtXq6fZA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ2OGVlYmUwZGU0MmZhMDc0ODU5NCIsImlhdCI6MTY3NzE3NjcyN30.gOlJCwrA2zCr5EitEq1XXA71iHDlEzgvNO5gTZ9ynWw
+
+### 重置密码
+POST  {{url}}/resetPassword
+{{json}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ2OGVlYmUwZGU0MmZhMDc0ODU5NCIsImlhdCI6MTY3NzE3NjcyN30.gOlJCwrA2zCr5EitEq1XXA71iHDlEzgvNO5gTZ9ynWw
+
+{
+  "id": "2019001"
+}
+
+### 全部学生信息
+GET {{url}}/studentsInfo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZjQ2OGVlYmUwZGU0MmZhMDc0ODU5NCIsImlhdCI6MTY3NzE3NjcyN30.gOlJCwrA2zCr5EitEq1XXA71iHDlEzgvNO5gTZ9ynWw

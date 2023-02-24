@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
     <div>
         <div class="crumbs">
             <el-breadcrumb separator="/">
@@ -60,10 +60,10 @@
                 <el-button size="small" type="primary">点击上传</el-button>
                 <div slot="tip" class="el-upload__tip">只能上传xls/xlsx文件，且不超过500kb</div>
             </el-upload>
-        </div>
+        </div> -->
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
+        <!-- <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
             <el-form ref="form" :model="form" label-width="70px">
                 <el-form-item label="用户名">
                     <el-input v-model="form.name"></el-input>
@@ -217,5 +217,172 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+</style>
+ -->
+
+
+<template>
+    <div class="container">
+        <div>
+            <el-table :data="students" height="715" style="width: 100%">
+                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="id" label="学号"></el-table-column>
+                <el-table-column prop="major" label="Major" :filter-method="filterByMajor" :filters="majorFilters">
+                    <template slot-scope="{ row }">{{ row.major }}</template>
+                </el-table-column>
+                <el-table-column prop="tutor" label="Tutor" :filter-method="filterByTutor" :filters="tutorFilters">
+                    <template slot-scope="{ row }">{{ row.tutor }}</template>
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button size="mini" type="text" @click="handleDelete(scope.$index)">删除</el-button>
+                        <el-button size="mini" type="text" @click="handleReset(scope.$index)">重置</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="button-group">
+                <el-upload class="flex-button upload-button" action="http://localhost:3001/api/upload" accept=".xls,.xlsx"
+                    :on-success="handleUploadSuccess" :on-error="handleUploadError" :before-upload="beforeUpload"
+                    ref="upload">
+                    <el-button type="primary" icon="el-icon-upload2">批量导入</el-button>
+                </el-upload>
+                <el-button class="flex-button" type="primary" icon="el-icon-download" @click="downloadFile">下载模板</el-button>
+                <el-button class="flex-button" type="primary" icon="el-icon-plus">新增学生</el-button>
+                <el-button class="flex-button" type="info" icon="el-icon-refresh">刷新数据</el-button>
+            </div>
+            <div slot="tip" class="el-upload__tip">请先下载模板再进行导入，文件大小不超过500kb</div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { getFile } from '../../api'
+export default {
+    data() {
+        return {
+            students: [],
+            majorFilters: [],
+            tutorFilters: [],
+            filterParams: {
+                major: '',
+                tutor: ''
+            },
+        }
+    },
+    computed: {
+        filteredStudents() {
+            const { major, tutor } = this.filterParams
+            return this.students.filter(student => {
+                return (!major || student.major.toLowerCase().includes(major.toLowerCase())) &&
+                    (!tutor || student.tutor.toLowerCase().includes(tutor.toLowerCase()))
+            })
+        },
+        uniqueMajors() {
+            console.log(students)
+            const majors = new Set()
+            this.students.forEach(student => {
+                majors.add(student.major)
+            })
+            console.log(majors)
+            return Array.from(majors)
+        },
+        uniqueTutors() {
+            const tutors = new Set()
+            this.students.forEach(student => {
+                tutors.add(student.tutor)
+            })
+            console.log(tutors)
+            return Array.from(tutors)
+        }
+    },
+    created() {
+        this.getStudentsInfo()
+        this.majorFilters = this.uniqueMajors.map(major => {
+            console.log('major', major)
+            return {
+                text: major,
+                value: major
+            }
+        })
+        this.tutorFilters = this.uniqueTutors.map(tutor => {
+            console.log('tutor', tutor)
+            return {
+                text: tutor,
+                value: tutor
+            }
+        })
+    },
+    methods: {
+        downloadFile() {
+            getFile('student.xlsx')
+        },
+        beforeUpload(file) {
+            const isExcel =
+                file.type === 'application/vnd.ms-excel' ||
+                file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            if (!isExcel) {
+                this.$message.error('只能上传 xls 或 xlsx 格式的文件')
+            }
+            return isExcel
+        },
+        handleUploadSuccess(response, file, fileList) {
+            this.$message.success('数据导入成功')
+        },
+        handleUploadError(error, file, fileList) {
+            this.$message.error('数据导入失败')
+        },
+        getStudentsInfo() {
+            this.$http
+                .get("http://localhost:3001/api/studentsInfo")
+                .then((res) => {
+                    console.log(res.data)
+                    this.students = res.data
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+        },
+        handleDelete(row) {
+            console.log(row)
+            // Handle button click
+        },
+        handleReset(row) {
+            console.log(row)
+            // Handle button click
+        },
+        filterByMajor(value, row) {
+            return !value || row.major.toLowerCase().includes(value.toLowerCase())
+        },
+        filterByTutor(value, row) {
+            return !value || row.tutor.toLowerCase().includes(value.toLowerCase())
+        },
+    },
+}
+</script>
+
+<style>
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.flex-button {
+    width: 97px;
+}
+
+.upload-button {
+    margin-right: 10px;
+}
+
+.el-upload-list__item-name {
+    margin-right: 20px;
 }
 </style>
