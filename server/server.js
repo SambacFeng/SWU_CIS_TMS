@@ -43,6 +43,13 @@ app.get('/api/getAllUsers', async (req, res) => {
   res.send(users)
 })
 
+app.get('/api/studentsInfo', async(req, res) => {
+  console.log('请求学生信息')
+  const students = await Student.find({})
+  res.json(students)
+  // res.send('学生信息已发送')
+})
+
 // 注册
 const register = async (id, password, role = '1') => {
   console.log('reg', id, password, role)
@@ -186,7 +193,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 })
 
-app.post('/api/modify', auth, async (req, res) => {
+app.post('/api/modifyPassword', auth, async (req, res) => {
   const { oldPassword, newPassword } = req.body
   const { user } = req
   console.log(req.body)
@@ -195,12 +202,24 @@ app.post('/api/modify', auth, async (req, res) => {
     console.log('原密码是对的')
     user.password = newPassword
     await user.save()
-    
+
   } else {
     console.log('原密码不对')
-    res.status(401).send('修改失败，原密码错误')
+    res.status(401).send('原密码错误，修改失败')
   }
   return res.send('密码修改成功，下次登录时请使用新密码')
+})
+
+app.post('/api/resetPassword', auth, async (req, res) => {
+  const { id } = req.body
+  const { user } = req
+  if (user.id !== 'admin') {
+    return res.status(501).send('非管理员不能操作')
+  }
+  const targetUser = await User.findOne({id})
+  targetUser.password = id
+  await targetUser.save()
+  return res.send('密码重置成功')
 })
 
 // 需要使用认证的加auth，先执行认证

@@ -59,7 +59,7 @@ export default {
             this.$refs.form.validate(valid => {
                 if (valid) {
                     // 发送请求修改密码
-                    post('modify', this.form).then(res => {
+                    post('modifyPassword', this.form).then(res => {
                         this.$message.success(res.data)
                         this.resetForm()
                     }).catch(err => {
