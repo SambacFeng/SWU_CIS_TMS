@@ -226,18 +226,18 @@ export default {
     <div class="container">
         <div>
             <el-table :data="students" height="715" style="width: 100%">
-                <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="id" label="学号"></el-table-column>
-                <el-table-column prop="major" label="Major" :filter-method="filterByMajor" :filters="majorFilters">
+                <el-table-column prop="name" label="姓名" sortable></el-table-column>
+                <el-table-column prop="id" label="学号" sortable></el-table-column>
+                <el-table-column prop="major" label="Major" :filter-method="filterByMajor" :filters="majorFilters" sortable>
                     <template slot-scope="{ row }">{{ row.major }}</template>
                 </el-table-column>
-                <el-table-column prop="tutor" label="Tutor" :filter-method="filterByTutor" :filters="tutorFilters">
+                <el-table-column prop="tutor" label="Tutor" :filter-method="filterByTutor" :filters="tutorFilters" sortable>
                     <template slot-scope="{ row }">{{ row.tutor }}</template>
                 </el-table-column>
                 <el-table-column label="操作">
                     <template slot-scope="scope">
-                        <el-button size="mini" type="text" @click="handleDelete(scope.$index)">删除</el-button>
-                        <el-button size="mini" type="text" @click="handleReset(scope.$index)">重置</el-button>
+                        <el-button size="mini" type="text" @click="handleDelete(scope)">删除</el-button>
+                        <el-button size="mini" type="text" @click="handleReset(scope)">重置</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -263,55 +263,20 @@ export default {
         return {
             students: [],
             majorFilters: [],
-            tutorFilters: [],
-            filterParams: {
-                major: '',
-                tutor: ''
-            },
-        }
-    },
-    computed: {
-        filteredStudents() {
-            const { major, tutor } = this.filterParams
-            return this.students.filter(student => {
-                return (!major || student.major.toLowerCase().includes(major.toLowerCase())) &&
-                    (!tutor || student.tutor.toLowerCase().includes(tutor.toLowerCase()))
-            })
-        },
-        uniqueMajors() {
-            console.log(students)
-            const majors = new Set()
-            this.students.forEach(student => {
-                majors.add(student.major)
-            })
-            console.log(majors)
-            return Array.from(majors)
-        },
-        uniqueTutors() {
-            const tutors = new Set()
-            this.students.forEach(student => {
-                tutors.add(student.tutor)
-            })
-            console.log(tutors)
-            return Array.from(tutors)
+            tutorFilters: []
         }
     },
     created() {
         this.getStudentsInfo()
-        this.majorFilters = this.uniqueMajors.map(major => {
-            console.log('major', major)
-            return {
-                text: major,
-                value: major
-            }
-        })
-        this.tutorFilters = this.uniqueTutors.map(tutor => {
-            console.log('tutor', tutor)
-            return {
-                text: tutor,
-                value: tutor
-            }
-        })
+    },
+    watch: {
+        students: {
+            handler(students) {
+                this.majorFilters = this.getUniqueFilters(students, 'major')
+                this.tutorFilters = this.getUniqueFilters(students, 'tutor')
+            },
+            immediate: true // 立即触发，确保在组件挂载后初始化 filters
+        }
     },
     methods: {
         downloadFile() {
@@ -326,11 +291,11 @@ export default {
             }
             return isExcel
         },
-        handleUploadSuccess(response, file, fileList) {
+        handleUploadSuccess() {
             this.$message.success('数据导入成功')
         },
-        handleUploadError(error, file, fileList) {
-            this.$message.error('数据导入失败')
+        handleUploadError() {
+            this.$message.error('数据导入失败，请刷新页面后重试，若问题依旧，请与开发者联系')
         },
         getStudentsInfo() {
             this.$http
@@ -343,12 +308,13 @@ export default {
                     console.log(error)
                 })
         },
-        handleDelete(row) {
-            console.log(row)
+        handleDelete(scope) {
+            const { row, $index } = scope
+            console.log(scope)
             // Handle button click
         },
-        handleReset(row) {
-            console.log(row)
+        handleReset(scope) {
+            console.log(scope)
             // Handle button click
         },
         filterByMajor(value, row) {
@@ -356,6 +322,11 @@ export default {
         },
         filterByTutor(value, row) {
             return !value || row.tutor.toLowerCase().includes(value.toLowerCase())
+        },
+        getUniqueFilters(data, key) {
+            const set = new Set()
+            data.forEach(item => set.add(item[key]))
+            return Array.from(set).map(value => ({ text: value, value }))
         },
     },
 }
