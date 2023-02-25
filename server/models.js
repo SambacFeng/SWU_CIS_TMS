@@ -67,6 +67,7 @@ const TutorSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  grade: String,
   students: {
     type: [String],
     default: []

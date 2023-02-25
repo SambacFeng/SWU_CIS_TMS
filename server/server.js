@@ -50,6 +50,13 @@ app.get('/api/studentsInfo', async(req, res) => {
   // res.send('学生信息已发送')
 })
 
+app.get('/api/TutorsInfo', async(req, res) => {
+  console.log('请求导师信息')
+  const tutors = await Tutor.find({})
+  res.json(tutors)
+  // res.send('学生信息已发送')
+})
+
 // 注册
 const register = async (id, password, role = '1') => {
   console.log('reg', id, password, role)
