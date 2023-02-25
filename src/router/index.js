@@ -25,9 +25,14 @@ export default new Router({
                     meta: { title: '自定义图标' }
                 },
                 {
-                    path: '/table',
-                    component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
-                    meta: { title: '基础表格' }
+                    path: '/students',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/Students.vue'),
+                    meta: { title: '学生管理' }
+                },
+                {
+                    path: '/tutors',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/Tutors.vue'),
+                    meta: { title: '导师管理' }
                 },
                 {
                     path: '/tabs',

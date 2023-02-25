@@ -63,8 +63,13 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-cascades',
-                    index: 'table',
-                    title: '基础表格'
+                    index: 'students',
+                    title: '学生管理'
+                },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    index: 'tutors',
+                    title: '导师管理'
                 },
                 {
                     icon: 'el-icon-lx-copy',
