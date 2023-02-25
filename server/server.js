@@ -226,6 +226,28 @@ app.post('/api/resetPassword', auth, async (req, res) => {
   return res.send('密码重置成功')
 })
 
+// 删除用户
+app.post('/api/deleteUser', auth, async (req, res) => {
+  const {id, type} = req.body
+  const { user } = req
+  if (user.id !== 'admin') {
+    return res.status(501).send('非管理员不能操作')
+  }
+  try {
+    const user = await User.findOneAndDelete({id})
+    if (!user) {
+      res.status(404).send('要删除的用户不存在')
+    } else {
+      const table = type === '1' ? Student : Tutor
+      await table.findOneAndDelete({id})
+      console.log(id, '已删除')
+      res.send('删除成功')
+    }
+  } catch (error) {
+    res.status(500).send('删除失败，服务器出错')
+  }
+})
+
 // 需要使用认证的加auth，先执行认证
 app.get('/api/info', auth, async (req, res) => {
   res.send(req.user)

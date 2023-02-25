@@ -328,15 +328,21 @@ export default {
         handleDelete(scope) {
             const { row, $index } = scope
             console.log(scope)
-            // Handle button click
+            post('deleteUser', {id: row.id, type: '1'}).then(res => {
+                this.$message.success(`${row.name}已删除`)
+                this.getStudentsInfo()
+            }).catch(err => {
+                this.$message.error(err.response.data)
+            })
         },
         handleReset(scope) {
             const { row, $index } = scope
             console.log(row, $index, row.id)
             post('resetPassword', {id: row.id}).then(res => {
                 this.$message.success(`${row.name}的密码重置成功`)
+            }).catch(err => {
+                this.$message.error(err.response.data)
             })
-            // Handle button click
         },
         filterByMajor(value, row) {
             return !value || row.major.toLowerCase().includes(value.toLowerCase())
