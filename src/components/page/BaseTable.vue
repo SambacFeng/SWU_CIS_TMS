@@ -225,13 +225,30 @@ export default {
 <template>
     <div class="container">
         <div>
+            <!-- <el-form :inline="true">
+                <el-form-item>
+                    <el-select v-model="searchColumn" placeholder="选择搜索列">
+                        <el-option label="姓名" value="name"></el-option>
+                        <el-option label="学号" value="id"></el-option>
+                        <el-option label="专业" value="major"></el-option>
+                        <el-option label="导师" value="tutor"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-input v-model="searchText" placeholder="输入搜索内容"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="handleSearch">搜索</el-button>
+                    <el-button @click="handleClear">清空</el-button>
+                </el-form-item>
+            </el-form> -->
             <el-table :data="students" height="715" style="width: 100%">
                 <el-table-column prop="name" label="姓名" sortable></el-table-column>
                 <el-table-column prop="id" label="学号" sortable></el-table-column>
-                <el-table-column prop="major" label="Major" :filter-method="filterByMajor" :filters="majorFilters" sortable>
+                <el-table-column prop="major" label="专业" :filter-method="filterByMajor" :filters="majorFilters" sortable>
                     <template slot-scope="{ row }">{{ row.major }}</template>
                 </el-table-column>
-                <el-table-column prop="tutor" label="Tutor" :filter-method="filterByTutor" :filters="tutorFilters" sortable>
+                <el-table-column prop="tutor" label="导师" :filter-method="filterByTutor" :filters="tutorFilters" sortable>
                     <template slot-scope="{ row }">{{ row.tutor }}</template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -257,7 +274,7 @@ export default {
 </template>
 
 <script>
-import { getFile } from '../../api'
+import { getFile, post } from '../../api'
 export default {
     data() {
         return {
@@ -314,7 +331,11 @@ export default {
             // Handle button click
         },
         handleReset(scope) {
-            console.log(scope)
+            const { row, $index } = scope
+            console.log(row, $index, row.id)
+            post('resetPassword', {id: row.id}).then(res => {
+                this.$message.success(`${row.name}的密码重置成功`)
+            })
             // Handle button click
         },
         filterByMajor(value, row) {

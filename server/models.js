@@ -77,6 +77,10 @@ const TutorSchema = new mongoose.Schema({
   comments: {
     type: [String],
     default: []
+  },
+  score: {
+    type: [Number],
+    default: []
   }
 })
 const Tutor = mongoose.model('Tutor', TutorSchema)

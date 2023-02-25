@@ -26,11 +26,11 @@ app.all("*", (req, res, next) => {
 // express中间件，用于token认证
 const auth = async (req, res, next) => {
   const raw = String(req.headers.authorization).split(' ').pop()
-  console.log('jwt token的值是', raw)
+  // console.log('jwt token的值是', raw)
   const { id } = jwt.verify(raw, SECRETKEY)
-  console.log('解码后的用户id是', id)
+  // console.log('解码后的用户id是', id)
   req.user = await User.findById(id)
-  console.log('这个用户是', req.user)
+  console.log('这个用户是', req.user.id)
   next()
 }
 
@@ -193,6 +193,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
   }
 })
 
+// 修改用户密码
 app.post('/api/modifyPassword', auth, async (req, res) => {
   const { oldPassword, newPassword } = req.body
   const { user } = req
@@ -210,8 +211,10 @@ app.post('/api/modifyPassword', auth, async (req, res) => {
   return res.send('密码修改成功，下次登录时请使用新密码')
 })
 
+// 重置密码
 app.post('/api/resetPassword', auth, async (req, res) => {
   const { id } = req.body
+  // console.log(req.body)
   const { user } = req
   if (user.id !== 'admin') {
     return res.status(501).send('非管理员不能操作')
@@ -219,6 +222,7 @@ app.post('/api/resetPassword', auth, async (req, res) => {
   const targetUser = await User.findOne({id})
   targetUser.password = id
   await targetUser.save()
+  console.log(id, '的密码重置成功')
   return res.send('密码重置成功')
 })
 
