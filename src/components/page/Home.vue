@@ -31,7 +31,11 @@
       </div>
     </template>
     <!-- 导师 -->
-    <template v-if="type === '2'"></template>
+    <template v-if="type === '2'">
+      <span v-if="userInfo.preStudents.length > 0">
+        您还有未确认的学生，请<el-link class="inline-link" type="primary" @click="goToAnotherPage('/tutorConfirm')">点击确认</el-link>
+      </span>
+    </template>
   </div>
 </template>
 

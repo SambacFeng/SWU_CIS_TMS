@@ -257,8 +257,8 @@ export default {
         </el-table-column>
         <el-table-column label="操作" min-width="90">
           <template slot-scope="scope">
-            <el-button class="text-button-danger" size="mini" type="text" @click="handleDelete(scope)">删除</el-button>
-            <el-button size="mini" type="text" @click="handleReset(scope)">重置</el-button>
+            <el-button class="text-button-danger" type="text" @click="handleDelete(scope)">删除</el-button>
+            <el-button type="text" @click="handleReset(scope)">重置</el-button>
           </template>
         </el-table-column>
       </el-table>

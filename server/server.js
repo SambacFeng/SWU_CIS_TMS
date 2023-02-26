@@ -57,6 +57,11 @@ app.get('/api/TutorsInfo', async (req, res) => {
   // res.send('学生信息已发送')
 })
 
+app.get('/api/preStudents', async (req, res) => {
+  const students = await Student.find({ preTutor: req.query.id })
+  res.json(students)
+})
+
 // 获取单个用户信息
 app.get('/api/info', async (req, res) => {
   const { type, id } = req.query
@@ -281,6 +286,23 @@ app.post('/api/select', async (req, res) => {
     return res.send('选择成功，请等待导师确认，若导师长时间未确认请与导师联系')
   }
   console.log(tutor.students.length)
+})
+
+// 导师反选学生
+app.post('/api/confirm', async (req, res) => {
+  const { studentId, tutorId } = req.body
+  console.log(tutorId, '确认选', studentId)
+  const tutor = await Tutor.findOne({ id: tutorId })
+  const student = await Student.findOne({ id: studentId })
+  student.preTutor = ''
+  student.tutor = tutorId
+  const index = tutor.preStudents.indexOf(studentId)
+  if (index !== -1) {
+    tutor.preStudents.splice(index, 1)
+  }
+  await student.save()
+  await tutor.save()
+  res.send('已成功选择')
 })
 
 // 需要使用认证的加auth，先执行认证

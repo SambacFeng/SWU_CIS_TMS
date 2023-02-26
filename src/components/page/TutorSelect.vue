@@ -1,8 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <el-table :data="tutors" style="width: 100%" highlight-current-row
-        :default-sort="{ prop: 'id', order: 'ascending' }">
+      <el-table :data="tutors" style="width: 100%" highlight-current-row>
         <el-table-column prop="name" label="姓名" min-width="80" sortable></el-table-column>
         <el-table-column prop="selected" label="学生人数" min-width="100" sortable></el-table-column>
         <el-table-column prop="email" label="邮箱" min-width="160"></el-table-column>
