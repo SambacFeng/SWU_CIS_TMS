@@ -8,8 +8,9 @@
         <el-table-column prop="phone" label="联系电话" min-width="100"></el-table-column>
         <el-table-column label="操作" min-width="90">
           <template slot-scope="scope">
-            <el-button type="text" @click="handleAccept(scope.$index)">接受</el-button>
-            <el-button class="text-button-danger" type="text" @click="handleRefuse(scope.$index)">拒绝</el-button>
+            <el-button type="text" @click="handleAccept(scope.$index)" :disabled="scope.row.disabled">接受</el-button>
+            <el-button class="text-button-danger" type="text" @click="handleRefuse(scope.$index)"
+              :disabled="scope.row.disabled">拒绝</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -60,12 +61,20 @@ export default {
       })
     },
     handleRefuse(index) {
-      this.$comfirm(`确定拒绝${this.preStudents[index].name}的选择吗`, '提示', {
+      this.$confirm(`确定拒绝${this.preStudents[index].name}的选择吗`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-
+        const student = this.preStudents[index]
+        post('refuse', {
+          studentId: student.id,
+          tutorId: localStorage.getItem('id')
+        }).then(() => {
+          this.$message.warning(`您已拒绝指导${student.name}同学`)
+        }).catch(err => {
+          this.$message.error(err.response.data)
+        })
       })
       // this.$confirm(`确定选择${this.tutors[index].name}作为你的导师吗`, '提示', {
       //   confirmButtonText: '确定',

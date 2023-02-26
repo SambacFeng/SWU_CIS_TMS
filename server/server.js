@@ -294,16 +294,36 @@ app.post('/api/confirm', async (req, res) => {
   console.log(tutorId, '确认选', studentId)
   const tutor = await Tutor.findOne({ id: tutorId })
   const student = await Student.findOne({ id: studentId })
+  if (student.preTutor == '') {
+    return res.status(403).send('您已选择过该学生，无需再选')
+  } else {
+    student.preTutor = ''
+    student.tutor = tutorId
+    const index = tutor.preStudents.indexOf(studentId)
+    if (index !== -1) {
+      tutor.preStudents.splice(index, 1)
+    }
+    tutor.students.push(studentId)
+    await student.save()
+    await tutor.save()
+    return res.send('已成功选择')
+  }
+})
+
+// 导师拒绝学生
+app.post('/api/refuse', async (req, res) => {
+  const { studentId, tutorId } = req.body
+  console.log(tutorId, '拒绝选', studentId)
+  const tutor = await Tutor.findOne({ id: tutorId })
+  const student = await Student.findOne({ id: studentId })
   student.preTutor = ''
-  student.tutor = tutorId
   const index = tutor.preStudents.indexOf(studentId)
   if (index !== -1) {
     tutor.preStudents.splice(index, 1)
   }
-  tutor.students.push(studentId)
   await student.save()
   await tutor.save()
-  res.send('已成功选择')
+  return res.send('已成功拒绝')
 })
 
 // 需要使用认证的加auth，先执行认证

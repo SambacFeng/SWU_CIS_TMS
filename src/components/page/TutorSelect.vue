@@ -77,8 +77,13 @@ export default {
           tutorId: tutor.id
         }).then(res => {
           console.log(res)
-          this.$message.success(res.data)
-          this.$forceUpdate()
+          this.$message({
+            message: res.data,
+            type: 'success',
+            onClose: () => {
+              this.$router.go(0)
+            }
+          })
         }).catch(err => {
           this.$message.error(err.response.data)
         })
