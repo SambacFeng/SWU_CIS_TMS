@@ -3,15 +3,17 @@
     <div>
       <el-table :data="tutors" height="715" style="width: 100%" highlight-current-row
         :default-sort="{ prop: 'id', order: 'ascending' }">
-        <el-table-column prop="name" label="姓名" sortable></el-table-column>
-        <el-table-column prop="id" label="教工号" sortable></el-table-column>
-        <el-table-column prop="grade" label="年级" :filter-method="filterByGrade" :filters="gradeFilters" sortable>
+        <el-table-column prop="name" label="姓名" min-width="80" sortable></el-table-column>
+        <el-table-column prop="id" label="教工号" min-width="90" sortable></el-table-column>
+        <el-table-column prop="grade" label="年级" min-width="80" :filter-method="filterByGrade" :filters="gradeFilters"
+          sortable>
           <template slot-scope="{ row }">{{ row.grade }}</template>
         </el-table-column>
-        <el-table-column prop="major" label="专业" :filter-method="filterByMajor" :filters="majorFilters" sortable>
+        <el-table-column prop="major" label="专业" min-width="300" :filter-method="filterByMajor" :filters="majorFilters"
+          sortable>
           <template slot-scope="{ row }">{{ String(row.major) }}</template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" min-width="90">
           <template slot-scope="scope">
             <el-button class="text-button-danger" size="mini" type="text" @click="handleDelete(scope)">删除</el-button>
             <el-button size="mini" type="text" @click="handleReset(scope)">重置</el-button>
