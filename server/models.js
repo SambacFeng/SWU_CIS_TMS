@@ -73,6 +73,10 @@ const TutorSchema = new mongoose.Schema({
     type: [String],
     default: []
   },
+  preStudents: {
+    type: [String],
+    default: []
+  },
   phone: String,
   email: String,
   link: String,

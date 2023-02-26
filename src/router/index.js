@@ -40,6 +40,11 @@ export default new Router({
                     meta: { title: '导师管理' }
                 },
                 {
+                    path: '/tutorSelect',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/TutorSelect.vue'),
+                    meta: { title: '导师选择' }
+                },
+                {
                     path: '/tabs',
                     component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
                     meta: { title: 'tab选项卡' }

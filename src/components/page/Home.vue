@@ -26,7 +26,7 @@
       <div v-else>
         <span>
           您还未选择导师，去
-          <el-link class="inline-link" type="primary" @click="goToAnotherPage()">选择导师</el-link>
+          <el-link class="inline-link" type="primary" @click="goToAnotherPage('/tutorSelect')">选择导师</el-link>
         </span>
       </div>
     </template>
@@ -62,6 +62,8 @@ export default {
     get('info', { type: this.type, id: this.id }).then(res => {
       console.log(res)
       this.userInfo = res.data
+      localStorage.setItem('grade', this.userInfo.grade)
+      localStorage.setItem('major', this.userInfo.major)
     })
   },
   mounted() {

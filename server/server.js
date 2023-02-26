@@ -263,6 +263,26 @@ app.post('/api/deleteUser', auth, async (req, res) => {
   }
 })
 
+// 选择导师
+app.post('/api/select', async (req, res) => {
+  const { studentId, tutorId } = req.body
+  console.log(studentId, '想选', tutorId)
+  const tutor = await Tutor.findOne({ id: tutorId })
+  const student = await Student.findOne({ id: studentId })
+  if (tutor.students.length + tutor.preStudents.length >= 15) {
+    return res.status(403).send('导师已被选满')
+  } else if (student.tutor || student.preTutor) {
+    return res.status(403).send('您已选过导师，无需再选')
+  } else {
+    tutor.preStudents.push(studentId)
+    student.preTutor = tutorId
+    await tutor.save()
+    await student.save()
+    return res.send('选择成功，请等待导师确认，若导师长时间未确认请与导师联系')
+  }
+  console.log(tutor.students.length)
+})
+
 // 需要使用认证的加auth，先执行认证
 app.get('/api/info', auth, async (req, res) => {
   res.send(req.user)
