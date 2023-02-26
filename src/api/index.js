@@ -3,6 +3,16 @@ import axios from 'axios'
 
 const baseURL = 'http://localhost:3001/api/'
 
+export const get = (url, params) => {
+    return axios.get(baseURL + url, {
+        params,
+        headers: {
+            // 带上jwt token进行身份认证
+            Authorization: window.localStorage.getItem('token')
+        }
+    })
+}
+
 export const post = (url, data) => {
     return axios.post(baseURL + url, data, {
         headers: {

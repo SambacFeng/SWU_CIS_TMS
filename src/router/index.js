@@ -7,7 +7,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/dashboard'
+            redirect: '/home'
         },
         {
             path: '/',
@@ -18,6 +18,11 @@ export default new Router({
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
                     meta: { title: '系统首页' }
+                },
+                {
+                    path: '/home',
+                    component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Home.vue'),
+                    meta: { title: '首页' }
                 },
                 {
                     path: '/icon',

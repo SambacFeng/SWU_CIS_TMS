@@ -43,18 +43,26 @@ app.get('/api/getAllUsers', async (req, res) => {
   res.send(users)
 })
 
-app.get('/api/studentsInfo', async(req, res) => {
+app.get('/api/studentsInfo', async (req, res) => {
   console.log('请求学生信息')
   const students = await Student.find({})
   res.json(students)
   // res.send('学生信息已发送')
 })
 
-app.get('/api/TutorsInfo', async(req, res) => {
+app.get('/api/TutorsInfo', async (req, res) => {
   console.log('请求导师信息')
   const tutors = await Tutor.find({})
   res.json(tutors)
   // res.send('学生信息已发送')
+})
+
+// 获取单个用户信息
+app.get('/api/info', async (req, res) => {
+  const { type, id } = req.query
+  const table = type == '1' ? Student : Tutor
+  const userInfo = await table.findOne({ id })
+  res.send(userInfo)
 })
 
 // 注册
@@ -226,7 +234,7 @@ app.post('/api/resetPassword', auth, async (req, res) => {
   if (user.id !== 'admin') {
     return res.status(501).send('非管理员不能操作')
   }
-  const targetUser = await User.findOne({id})
+  const targetUser = await User.findOne({ id })
   targetUser.password = id
   await targetUser.save()
   console.log(id, '的密码重置成功')
@@ -235,18 +243,18 @@ app.post('/api/resetPassword', auth, async (req, res) => {
 
 // 删除用户
 app.post('/api/deleteUser', auth, async (req, res) => {
-  const {id, type} = req.body
+  const { id, type } = req.body
   const { user } = req
   if (user.id !== 'admin') {
     return res.status(501).send('非管理员不能操作')
   }
   try {
-    const user = await User.findOneAndDelete({id})
+    const user = await User.findOneAndDelete({ id })
     if (!user) {
       res.status(404).send('要删除的用户不存在')
     } else {
       const table = type === '1' ? Student : Tutor
-      await table.findOneAndDelete({id})
+      await table.findOneAndDelete({ id })
       console.log(id, '已删除')
       res.send('删除成功')
     }

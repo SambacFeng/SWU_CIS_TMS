@@ -48,6 +48,7 @@ const StudentSchema = new mongoose.Schema({
   name: String,
   major: String,
   grade: String,
+  preTutor: String,
   tutor: {
     type: String,
     default: ''
