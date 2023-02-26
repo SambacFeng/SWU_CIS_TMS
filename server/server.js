@@ -300,6 +300,7 @@ app.post('/api/confirm', async (req, res) => {
   if (index !== -1) {
     tutor.preStudents.splice(index, 1)
   }
+  tutor.students.push(studentId)
   await student.save()
   await tutor.save()
   res.send('已成功选择')
