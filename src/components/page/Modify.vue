@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { post } from '../../api';
+import { post } from '../../api'
 export default {
     data() {
         return {
@@ -61,7 +61,8 @@ export default {
                     // 发送请求修改密码
                     post('modifyPassword', this.form).then(res => {
                         this.$message.success(res.data)
-                        this.resetForm()
+                        localStorage.clear()
+                        this.$router.push('/login')
                     }).catch(err => {
                         // console.log(err.response.data)
                         this.$message.error(err.response.data)
@@ -76,7 +77,7 @@ export default {
             this.$refs.form.resetFields()
         }
     }
-};
+}
 </script>
 
 <style scoped>

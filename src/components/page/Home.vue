@@ -56,6 +56,7 @@ export default {
       userInfo: {},
       tutorName: '',
       greeting: '',
+      passwordNeedModify: localStorage.getItem('passwordNeedModify') == 'true',
       id: localStorage.getItem('id'),
       type: localStorage.getItem('role'),
       adminLinks: [
@@ -90,6 +91,9 @@ export default {
         localStorage.setItem('students', this.userInfo.students)
       }
     })
+    if (this.passwordNeedModify) {
+      this.goToModifyPassWord()
+    }
   },
   mounted() {
     const currentTime = new Date().getHours()
@@ -115,6 +119,17 @@ export default {
         <div>邮箱：${this.userInfo.tutorInfo.email}</div>`
         , '联系方式', {
         dangerouslyUseHTMLString: true
+      })
+    },
+    goToModifyPassWord() {
+      this.$confirm('您首次登录系统或未修改初始密码，是否前往修改密码', '警告', {
+        confirmButtonText: '前往修改',
+        cancelButtonText: '下次再说',
+        type: 'warning'
+      }).then(() => {
+        this.$router.push('/modify')
+      }).catch(() => {
+        this.$message.warning('建议您尽快修改密码')
       })
     }
   }

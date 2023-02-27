@@ -51,7 +51,7 @@ export default {
                     post('login', this.param).then(res=> {
                         console.log(res)
                         if (res.status == 200) {
-                            const {user, token} = res.data
+                            const {user, token, passwordNeedModify} = res.data
                             const {id, role} = user
                             this.$message.success('登录成功')
                             console.log(res.data)
@@ -61,6 +61,7 @@ export default {
                             localStorage.setItem('token', token)
                             localStorage.setItem('id', id)
                             localStorage.setItem('role', role)
+                            localStorage.setItem('passwordNeedModify', passwordNeedModify)
                             this.$router.push('/')
                         } else {
                             this.$message.error('未知错误')

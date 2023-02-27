@@ -128,7 +128,8 @@ app.post('/api/login', async (req, res) => {
       message: '密码错误'
     })
   }
-
+  const passwordNeedModify = user.comparePassword(id)
+  console.log('passwordNeedModify', passwordNeedModify)
   console.log(`${id}登录成功`)
   // 生成token保持登录状态
   const token = jwt.sign({
@@ -137,7 +138,7 @@ app.post('/api/login', async (req, res) => {
   return res.send({
     user,
     token,
-    passwordNeedModify: user.comparePassword(id) ? true : false
+    passwordNeedModify
   })
 })
 
@@ -237,7 +238,7 @@ app.post('/api/modifyPassword', auth, async (req, res) => {
     console.log('原密码不对')
     res.status(401).send('原密码错误，修改失败')
   }
-  return res.send('密码修改成功，下次登录时请使用新密码')
+  return res.send('密码修改成功，请使用新密码重新登录')
 })
 
 // 重置密码
