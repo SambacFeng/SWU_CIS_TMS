@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { getFile, post } from '../../api'
+import { getFile, post, get } from '../../api'
 export default {
   data() {
     return {
@@ -76,8 +76,7 @@ export default {
       this.$message.error('数据导入失败，请刷新页面后重试，若问题依旧，请与开发者联系')
     },
     getTutorsInfo() {
-      this.$http
-        .get("http://localhost:3001/api/TutorsInfo")
+      get("TutorsInfo")
         .then((res) => {
           this.tutors = res.data
         })

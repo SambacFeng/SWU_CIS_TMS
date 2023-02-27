@@ -226,33 +226,36 @@ export default {
   <div class="container">
     <div>
       <!--             <el-form :inline="true">
-        <el-form-item>
-            <el-select v-model="searchColumn" placeholder="选择搜索列">
-                <el-option label="姓名" value="name"></el-option>
-                <el-option label="学号" value="id"></el-option>
-                <el-option label="专业" value="major"></el-option>
-                <el-option label="导师" value="tutor"></el-option>
-            </el-select>
-        </el-form-item>
-        <el-form-item>
-            <el-input v-model="searchText" placeholder="输入搜索内容"></el-input>
-        </el-form-item>
-        <el-form-item>
-            <el-button type="primary" @click="handleSearch">搜索</el-button>
-            <el-button @click="handleClear">清空</el-button>
-        </el-form-item>
-    </el-form> -->
+          <el-form-item>
+              <el-select v-model="searchColumn" placeholder="选择搜索列">
+                  <el-option label="姓名" value="name"></el-option>
+                  <el-option label="学号" value="id"></el-option>
+                  <el-option label="专业" value="major"></el-option>
+                  <el-option label="导师" value="tutor"></el-option>
+              </el-select>
+          </el-form-item>
+          <el-form-item>
+              <el-input v-model="searchText" placeholder="输入搜索内容"></el-input>
+          </el-form-item>
+          <el-form-item>
+              <el-button type="primary" @click="handleSearch">搜索</el-button>
+              <el-button @click="handleClear">清空</el-button>
+          </el-form-item>
+      </el-form> -->
       <el-table :data="students" height="715" style="width: 100%" highlight-current-row
         :default-sort="{ prop: 'id', order: 'ascending' }">
         <el-table-column prop="name" label="姓名" min-width="120" sortable></el-table-column>
         <el-table-column prop="id" label="学号" min-width="140" sortable></el-table-column>
-        <el-table-column prop="grade" label="年级" min-width="80" :filter-method="filterByGrade" :filters="gradeFilters" sortable>
+        <el-table-column prop="grade" label="年级" min-width="80" :filter-method="filterByGrade" :filters="gradeFilters"
+          sortable>
           <template slot-scope="{ row }">{{ row.grade }}</template>
         </el-table-column>
-        <el-table-column prop="major" label="专业" min-width="140" :filter-method="filterByMajor" :filters="majorFilters" sortable>
+        <el-table-column prop="major" label="专业" min-width="140" :filter-method="filterByMajor" :filters="majorFilters"
+          sortable>
           <template slot-scope="{ row }">{{ row.major }}</template>
         </el-table-column>
-        <el-table-column prop="tutor" label="导师" min-width="80" :filter-method="filterByTutor" :filters="tutorFilters" sortable>
+        <el-table-column prop="tutor" label="导师" min-width="80" :filter-method="filterByTutor" :filters="tutorFilters"
+          sortable>
           <template slot-scope="{ row }">{{ row.tutor }}</template>
         </el-table-column>
         <el-table-column label="操作" min-width="90">
@@ -297,7 +300,7 @@ export default {
 </template>
 
 <script>
-import { getFile, post } from '../../api'
+import { getFile, post, get } from '../../api'
 export default {
   data() {
     return {
@@ -348,8 +351,7 @@ export default {
       this.$message.error('数据导入失败，请刷新页面后重试，若问题依旧，请与开发者联系')
     },
     getStudentsInfo() {
-      this.$http
-        .get("http://localhost:3001/api/studentsInfo")
+      get("studentsInfo")
         .then((res) => {
           console.log(res.data)
           this.students = res.data
@@ -450,5 +452,4 @@ export default {
 .text-button-danger:hover,
 .text-button-danger:focus {
   color: #ec5151
-}
-</style>
+}</style>
