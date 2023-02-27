@@ -11,7 +11,7 @@ const upload = multer()
 const { SECRETKEY } = require('./SECRETKEY')
 
 // 导入MongoDB模型
-const { User, Student, Tutor } = require('./models')
+const { User, Student, Tutor, Record } = require('./models')
 
 const app = express()
 app.use(express.json())
@@ -136,7 +136,8 @@ app.post('/api/login', async (req, res) => {
   }, SECRETKEY)
   return res.send({
     user,
-    token
+    token,
+    passwordNeedModify: user.comparePassword(id) ? true : false
   })
 })
 
@@ -332,6 +333,13 @@ app.post('/api/refuse', async (req, res) => {
   await student.save()
   await tutor.save()
   return res.send('已成功拒绝')
+})
+
+// 提交指导记录
+app.post('/api/createRecord', async (req, res) => {
+  console.log('body', req.body)
+  await Record.create(req.body)
+  res.send('ok')
 })
 
 // 需要使用认证的加auth，先执行认证

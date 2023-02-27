@@ -50,6 +50,11 @@ export default new Router({
           meta: { title: '学生选择' }
         },
         {
+          path: '/createRecord',
+          component: () => import(/* webpackChunkName: "table" */ '../components/page/CreateRecord.vue'),
+          meta: { title: '新增指导记录' }
+        },
+        {
           path: '/tabs',
           component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
           meta: { title: 'tab选项卡' }

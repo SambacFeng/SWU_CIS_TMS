@@ -25,23 +25,13 @@ const UserSchema = new mongoose.Schema({
   },
   role: String
 })
-UserSchema.methods.comparePassword = function(password) {
-  // console.log(password, typeof password, this.password, typeof this.password)
+UserSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(String(password), this.password)
 }
-// UserSchema.methods.updatePassword = function(newPassword) {
-//   console.log(`${this.id}的密码修改为${newPassword}`)
-//   this.password = bcrypt.hashSync(String(newPassword), 4)
-//   this.save()
-// }
-// UserSchema.methods.resetPassword = function() {
-//   console.log(`${this.id}的密码被重置`)
-//   this.password = bcrypt.hashSync(this.id, 4)
-// }
 const User = mongoose.model('User', UserSchema)
 
 const StudentSchema = new mongoose.Schema({
-  id: { 
+  id: {
     type: String,
     unique: true
   },
@@ -59,7 +49,7 @@ const StudentSchema = new mongoose.Schema({
 const Student = mongoose.model('Student', StudentSchema)
 
 const TutorSchema = new mongoose.Schema({
-  id: { 
+  id: {
     type: String,
     unique: true
   },
@@ -91,4 +81,22 @@ const TutorSchema = new mongoose.Schema({
 })
 const Tutor = mongoose.model('Tutor', TutorSchema)
 
-module.exports = { User, Student, Tutor }
+const studentsPresentSchema = new mongoose.Schema({
+  id: String,
+  name: String
+})
+const RecordSchema = new mongoose.Schema({
+  tutorName: String,
+  studentsPresent: {
+    type: [studentsPresentSchema],
+    default: []
+  },
+  date: Date,
+  location: String,
+  content: String,
+  problem: String,
+  notation: String
+})
+const Record = mongoose.model('Record', RecordSchema)
+
+module.exports = { User, Student, Tutor, Record }

@@ -19,10 +19,13 @@
     <template v-if="type === '1'">
       <div v-if="userInfo.tutor" style="height: 30px;">
         你的导师是{{ tutorName }}老师，你可以
+        <el-link class="inline-link" type="primary" @click="openMessageBox()">查看导师联系方式</el-link>
+        或
+        <el-link class="inline-link" type="primary" @click="openMessageBox()">对导师进行评价</el-link>
       </div>
       <div v-else-if="userInfo.preTutor">
         你已选择了{{ tutorName }}老师，请等待老师确认，若老师长时间未确认，请
-        <el-link class="inline-link" type="primary" @click="openMessageBox()">联系老师</el-link>
+        <el-link class="inline-link" type="primary" @click="openMessageBox()">联系导师</el-link>
       </div>
       <div v-else>
         <span>
@@ -33,9 +36,14 @@
     </template>
     <!-- 导师 -->
     <template v-if="type === '2'">
-      <span v-if="userInfo.preStudents.length > 0">
-        您还有未确认的学生，请<el-link class="inline-link" type="primary" @click="goToAnotherPage('/tutorConfirm')">点击确认</el-link>
-      </span>
+      <div v-if="userInfo.preStudents.length > 0">
+        您还有未确认的学生，请
+        <el-link class="inline-link" type="primary" @click="goToAnotherPage('/tutorConfirm')">点击确认</el-link>
+      </div>
+      <div>
+        您可以：
+        <el-link class="inline-link" type="primary" @click="goToAnotherPage('/createRecord')">填写指导记录</el-link>
+      </div>
     </template>
   </div>
 </template>
@@ -68,14 +76,19 @@ export default {
     get('info', { type: this.type, id: this.id }).then(res => {
       console.log(res)
       this.userInfo = res.data
+      localStorage.setItem('name', this.userInfo.name)
       localStorage.setItem('grade', this.userInfo.grade)
       localStorage.setItem('major', this.userInfo.major)
-      get('info', { type: '2', id: this.userInfo.preTutor || this.userInfo.tutor })
-        .then(res => {
-          this.userInfo.tutorInfo = res.data
-          this.tutorName = this.userInfo.tutorInfo.name
-          console.log(this.userInfo.tutorInfo)
-        })
+      if (this.type === '1') {
+        get('info', { type: '2', id: this.userInfo.preTutor || this.userInfo.tutor })
+          .then(res => {
+            this.userInfo.tutorInfo = res.data
+            this.tutorName = this.userInfo.tutorInfo.name
+            console.log(this.userInfo.tutorInfo)
+          })
+      } else {
+        localStorage.setItem('students', this.userInfo.students)
+      }
     })
   },
   mounted() {
@@ -101,8 +114,8 @@ export default {
         <div>电话：${this.userInfo.tutorInfo.phone}</div>
         <div>邮箱：${this.userInfo.tutorInfo.email}</div>`
         , '联系方式', {
-          dangerouslyUseHTMLString: true
-        })
+        dangerouslyUseHTMLString: true
+      })
     }
   }
 }
