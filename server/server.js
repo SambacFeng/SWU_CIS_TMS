@@ -57,14 +57,22 @@ app.get('/api/TutorsInfo', async (req, res) => {
   // res.send('学生信息已发送')
 })
 
+// 导师获取全部预选学生信息
 app.get('/api/preStudents', async (req, res) => {
   const students = await Student.find({ preTutor: req.query.id })
+  res.json(students)
+})
+
+// 导师获取全部正式学生信息
+app.get('/api/getStudents', async (req, res) => {
+  const students = await Student.find({ tutor: req.query.id })
   res.json(students)
 })
 
 // 获取单个用户信息
 app.get('/api/info', async (req, res) => {
   const { type, id } = req.query
+  console.log('请求了', id, '的信息')
   const table = type == '1' ? Student : Tutor
   const userInfo = await table.findOne({ id })
   res.send(userInfo)
