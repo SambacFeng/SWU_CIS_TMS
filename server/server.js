@@ -300,7 +300,7 @@ app.post('/api/select', async (req, res) => {
 
 // 导师反选学生
 app.post('/api/confirm', async (req, res) => {
-  const { studentId, tutorId } = req.body
+  const { studentId, tutorId, tutorName } = req.body
   console.log(tutorId, '确认选', studentId)
   const tutor = await Tutor.findOne({ id: tutorId })
   const student = await Student.findOne({ id: studentId })
@@ -309,6 +309,7 @@ app.post('/api/confirm', async (req, res) => {
   } else {
     student.preTutor = ''
     student.tutor = tutorId
+    student.tutorName = tutorName
     const index = tutor.preStudents.indexOf(studentId)
     if (index !== -1) {
       tutor.preStudents.splice(index, 1)

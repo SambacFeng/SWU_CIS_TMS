@@ -53,7 +53,8 @@ export default {
       const student = this.preStudents[index]
       post('confirm', {
         studentId: student.id,
-        tutorId: localStorage.getItem('id')
+        tutorId: localStorage.getItem('id'),
+        tutorName: localStorage.getItem('name')
       }).then(res => {
         this.$message.success(`您已选择指导${student.name}同学`)
       }).catch(err => {

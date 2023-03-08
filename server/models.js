@@ -43,6 +43,10 @@ const StudentSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  tutorName: {
+    type: String,
+    default: ''
+  },
   phone: String,
   email: String
 })
