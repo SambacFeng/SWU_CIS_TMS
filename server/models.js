@@ -33,11 +33,21 @@ const User = mongoose.model('User', UserSchema)
 const StudentSchema = new mongoose.Schema({
   id: {
     type: String,
+    required: true,
     unique: true
   },
-  name: String,
-  major: String,
-  grade: String,
+  name: {
+    type: String,
+    required: true
+  },
+  major: {
+    type: String,
+    required: true
+  },
+  grade: {
+    type: String,
+    required: true
+  },
   preTutor: String,
   tutor: {
     type: String,
@@ -55,14 +65,22 @@ const Student = mongoose.model('Student', StudentSchema)
 const TutorSchema = new mongoose.Schema({
   id: {
     type: String,
+    required: true,
     unique: true
   },
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   major: {
     type: [String],
-    default: []
+    default: [],
+    required: true
   },
-  grade: String,
+  grade: {
+    type: String,
+    required: true
+  },
   students: {
     type: [String],
     default: []
