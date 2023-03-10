@@ -69,6 +69,11 @@ export default {
           id: 2,
           url: '/tutors',
           text: '管理导师信息'
+        },
+        {
+          id: 3,
+          url: '/records',
+          text: '查看指导记录'
         }
       ]
     }

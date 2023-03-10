@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const xlsx = require('node-xlsx')
 const multer = require('multer')
+const moment = require('moment-timezone')
 
 // 处理文件
 const upload = multer()
@@ -43,6 +44,7 @@ app.get('/api/getAllUsers', async (req, res) => {
   res.send(users)
 })
 
+// 管理员获取全部学生信息
 app.get('/api/studentsInfo', async (req, res) => {
   console.log('请求学生信息')
   const students = await Student.find({})
@@ -50,10 +52,30 @@ app.get('/api/studentsInfo', async (req, res) => {
   // res.send('学生信息已发送')
 })
 
+// 管理员获取全部导师信息
 app.get('/api/TutorsInfo', async (req, res) => {
   console.log('请求导师信息')
   const tutors = await Tutor.find({})
   res.json(tutors)
+  // res.send('学生信息已发送')
+})
+
+// 管理员获取全部指导记录
+app.get('/api/RecordsInfo', async (req, res) => {
+  console.log('请求指导记录')
+  const records = await Record.find({})
+  const formattedRecords = records.map(record => {
+    const formattedDate = moment(record.date).tz('Asia/Shanghai').format('YYYY-MM-DD HH:mm')
+    const studentsName = record.studentsPresent.map(student => {
+      return student.name
+    })
+    return {
+      ...record.toObject(),
+      date: formattedDate,
+      studentsName
+    }
+  })
+  res.send(formattedRecords)
   // res.send('学生信息已发送')
 })
 
