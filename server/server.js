@@ -193,7 +193,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     const records = data.map(async (row) => {
       const record = {}
       row.forEach((cell, index) => {
-        if (fileName === 'tutor' && keys[index] == 'major') {
+        if (fileName.startsWith('tutor') && keys[index] == 'major') {
           cell = cell.split(',')
         }
         record[keys[index]] = cell
@@ -212,7 +212,7 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
               console.log(record.name, '的数据写入成功', res)
             }
           })
-          register(
+          await register(
             record.id,
             record.id,
             fileName.startsWith('student') ? '1' : '2'
