@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-table :data="records" style="width: 100%">
+    <el-table :data="records" style="width: 100%" :default-sort="{ prop: 'date', order: 'ascending' }">
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="table-expand">
@@ -13,7 +13,7 @@
             <el-form-item class="short-label" style="width: 40%;" label="地点">
               <span style="display: inline; word-break: inherit;">{{ props.row.location }}</span>
             </el-form-item>
-            <el-form-item class="long-label" style="width: 100%;" label="学生">
+            <el-form-item class="long-label" label="学生">
               <span>{{ props.row.studentsName.join('、') }}</span>
             </el-form-item>
             <el-form-item class="long-label" label="主要内容">
@@ -28,9 +28,9 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column label="导师" prop="tutorName">
+      <el-table-column label="导师" sortable prop="tutorName" :filter-method="filterByTutorName" :filters="tutorNameFilters">
       </el-table-column>
-      <el-table-column label="时间" prop="date">
+      <el-table-column label="时间" sortable prop="date">
       </el-table-column>
       <el-table-column label="地点" prop="location">
       </el-table-column>
@@ -43,44 +43,20 @@ import { get } from '../../api'
 export default {
   data() {
     return {
-      tableData: [{
-        id: '12987122',
-        name: '好滋好味鸡蛋仔',
-        category: '江浙小吃、小吃零食',
-        desc: '荷兰优质淡奶，奶香浓而不腻',
-        address: '上海市普陀区真北路',
-        shop: '王小虎夫妻店',
-        shopId: '10333'
-      }, {
-        id: '12987123',
-        name: '好滋好味鸡蛋仔',
-        category: '江浙小吃、小吃零食',
-        desc: '荷兰优质淡奶，奶香浓而不腻',
-        address: '上海市普陀区真北路',
-        shop: '王小虎夫妻店',
-        shopId: '10333'
-      }, {
-        id: '12987125',
-        name: '好滋好味鸡蛋仔',
-        category: '江浙小吃、小吃零食',
-        desc: '荷兰优质淡奶，奶香浓而不腻',
-        address: '上海市普陀区真北路',
-        shop: '王小虎夫妻店',
-        shopId: '10333'
-      }, {
-        id: '12987126',
-        name: '好滋好味鸡蛋仔',
-        category: '江浙小吃、小吃零食',
-        desc: '荷兰优质淡奶，奶香浓而不腻',
-        address: '上海市普陀区真北路',
-        shop: '王小虎夫妻店',
-        shopId: '10333'
-      }],
-      records: []
+      records: [],
+      tutorNameFilters: []
     }
   },
   created() {
     this.getRecordsInfo()
+  },
+  watch: {
+    records: {
+      handler(records) {
+        this.tutorNameFilters = this.getUniqueFilters(records, 'tutorName')
+      },
+      immediate: true // 立即触发，确保在组件挂载后初始化 filters
+    }
   },
   methods: {
     getRecordsInfo() {
@@ -92,7 +68,15 @@ export default {
         .catch(err => {
           console.log(err)
         })
-    }
+    },
+    filterByTutorName(value, row) {
+      return !value || row.tutorName.toLowerCase().includes(value.toLowerCase())
+    },
+    getUniqueFilters(data, key) {
+      const set = new Set()
+      data.forEach(item => set.add(item[key]))
+      return Array.from(set).map(value => ({ text: value, value }))
+    },
   }
 }
 </script>

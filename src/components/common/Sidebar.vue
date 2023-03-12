@@ -72,6 +72,11 @@ export default {
                     title: '导师管理'
                 },
                 {
+                    icon: 'el-icon-lx-cascades',
+                    index: 'records',
+                    title: '指导记录'
+                },
+                {
                     icon: 'el-icon-lx-copy',
                     index: 'tabs',
                     title: 'tab选项卡'

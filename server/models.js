@@ -108,12 +108,18 @@ const studentsPresentSchema = new mongoose.Schema({
   name: String
 })
 const RecordSchema = new mongoose.Schema({
-  tutorName: String,
+  tutorName: {
+    type: String,
+    required: true
+  },
   studentsPresent: {
     type: [studentsPresentSchema],
     default: []
   },
-  date: Date,
+  date: {
+    type: Date,
+    required: true
+  },
   location: String,
   content: String,
   problem: String,
