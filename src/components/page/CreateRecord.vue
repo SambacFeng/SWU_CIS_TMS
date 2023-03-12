@@ -132,6 +132,8 @@ export default {
             .then(() => {
               this.$message.success('提交指导记录成功')
             })
+        } else {
+          this.$message.error('请完成所有必填项后再提交')
         }
       })
     }
