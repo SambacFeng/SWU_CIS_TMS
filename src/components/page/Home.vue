@@ -21,7 +21,7 @@
         你的导师是{{ tutorName }}老师，你可以
         <el-link class="inline-link" type="primary" @click="openMessageBox()">查看导师联系方式</el-link>
         或
-        <el-link class="inline-link" type="primary" @click="openMessageBox()">对导师进行评价</el-link>
+        <el-link class="inline-link" type="primary" @click="goToAnotherPage('/evaluation')">对导师进行评价</el-link>
       </div>
       <div v-else-if="userInfo.preTutor">
         你已选择了{{ tutorName }}老师，请等待老师确认，若老师长时间未确认，请
@@ -86,10 +86,12 @@ export default {
       localStorage.setItem('grade', this.userInfo.grade)
       localStorage.setItem('major', this.userInfo.major)
       if (this.type === '1') {
+        // 获取学生的导师信息
         get('info', { type: '2', id: this.userInfo.preTutor || this.userInfo.tutor })
           .then(res => {
             this.userInfo.tutorInfo = res.data
             this.tutorName = this.userInfo.tutorInfo.name
+            localStorage.setItem('tutor', this.userInfo.tutorInfo.id)
             console.log(this.userInfo.tutorInfo)
           })
       } else {

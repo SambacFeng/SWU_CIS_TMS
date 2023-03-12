@@ -366,6 +366,25 @@ app.post('/api/createRecord', async (req, res) => {
   res.send('ok')
 })
 
+// 学生评价导师
+app.post('/api/evaluation', async (req, res) => {
+  const { rating, comment, student, tutorId } = req.body
+  console.log(`学生${student}提交对导师${tutorId}的评价`)
+  const evaluationData = {
+    rating,
+    comment,
+    student
+  }
+  await Tutor.findOneAndUpdate(
+    { id: tutorId },
+    { $push: { evaluation: evaluationData } }
+  ).then(() => {
+    return res.send('评价成功')
+  }).catch(() => {
+    return res.status(500)
+  })
+})
+
 // 需要使用认证的加auth，先执行认证
 app.get('/api/info', auth, async (req, res) => {
   res.send(req.user)

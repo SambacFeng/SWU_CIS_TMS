@@ -60,6 +60,11 @@ export default new Router({
           meta: { title: '新增指导记录' }
         },
         {
+          path: '/evaluation',
+          component: () => import(/* webpackChunkName: "table" */ '../components/page/Evaluation.vue'),
+          meta: { title: '导师评价' }
+        },
+        {
           path: '/tabs',
           component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
           meta: { title: 'tab选项卡' }

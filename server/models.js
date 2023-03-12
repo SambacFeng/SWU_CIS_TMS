@@ -4,7 +4,8 @@ const bcrypt = require('bcryptjs')
 mongoose.connect('mongodb://localhost:27017/DBM-server', {
   useCreateIndex: true,
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 }).then(() => {
   console.log('连接数据库成功')
 })
@@ -62,6 +63,17 @@ const StudentSchema = new mongoose.Schema({
 })
 const Student = mongoose.model('Student', StudentSchema)
 
+const evaluationSchema = new mongoose.Schema({
+  rating: {
+    type: Number,
+    required: true
+  },
+  comment: String,
+  student: {
+    type: String,
+    required: true
+  },
+})
 const TutorSchema = new mongoose.Schema({
   id: {
     type: String,
@@ -92,12 +104,8 @@ const TutorSchema = new mongoose.Schema({
   phone: String,
   email: String,
   link: String,
-  comments: {
-    type: [String],
-    default: []
-  },
-  score: {
-    type: [Number],
+  evaluation: {
+    type: [evaluationSchema],
     default: []
   }
 })
