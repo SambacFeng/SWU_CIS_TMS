@@ -1,15 +1,15 @@
 <template>
   <div class="container">
     <div>
-      <el-table :data="tutors" height="715" style="width: 100%" highlight-current-row
+      <el-table :data="tutors" height="715" highlight-current-row
         :default-sort="{ prop: 'id', order: 'ascending' }">
-        <el-table-column prop="name" label="姓名" min-width="80" sortable></el-table-column>
+        <el-table-column prop="name" label="姓名" min-width="80" sortable fixed></el-table-column>
         <el-table-column prop="id" label="教工号" min-width="90" sortable></el-table-column>
         <el-table-column prop="grade" label="年级" min-width="80" :filter-method="filterByGrade" :filters="gradeFilters"
           sortable>
           <template slot-scope="{ row }">{{ row.grade }}</template>
         </el-table-column>
-        <el-table-column prop="major" label="专业" min-width="200" :filter-method="filterByMajor" :filters="majorFilters"
+        <el-table-column prop="major" label="专业" min-width="180" :filter-method="filterByMajor" :filters="majorFilters"
           sortable>
           <template slot-scope="{ row }">{{ String(row.major) }}</template>
         </el-table-column>
