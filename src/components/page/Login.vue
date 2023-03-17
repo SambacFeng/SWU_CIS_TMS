@@ -4,17 +4,17 @@
       <div class="ms-title">计信院导师管理系统</div>
       <el-form :model="param" :rules="rules" ref="login" label-width="0px" class="ms-content">
         <el-form-item prop="id">
-          <el-input v-model="param.id" placeholder="请输入用户名">
+          <el-input v-model="param.id" placeholder="请输入用户名" tabindex="1">
             <el-button slot="prepend" icon="el-icon-lx-people"></el-button>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="请输入密码" v-model="param.password" @keyup.enter.native="submitForm()">
+          <el-input type="password" placeholder="请输入密码" v-model="param.password" @keyup.enter.native="submitForm()" tabindex="2">
             <el-button slot="prepend" icon="el-icon-lx-lock"></el-button>
           </el-input>
         </el-form-item>
         <div class="login-btn">
-          <el-button type="primary" @click="submitForm()">登录</el-button>
+          <el-button type="primary" @click="submitForm()" tabindex="3">登录</el-button>
         </div>
         <p class="login-tips">Tips : 初始用户名/密码均为学号/教工号<br />忘记密码请联系学院管理员进行重置<br />建议使用新版本Chrome或Firefox以获取更好体验</p>
       </el-form>
