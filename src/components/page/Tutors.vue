@@ -9,10 +9,14 @@
           sortable>
           <template slot-scope="{ row }">{{ row.grade }}</template>
         </el-table-column>
-        <el-table-column prop="major" label="专业" min-width="300" :filter-method="filterByMajor" :filters="majorFilters"
+        <el-table-column prop="major" label="专业" min-width="200" :filter-method="filterByMajor" :filters="majorFilters"
           sortable>
           <template slot-scope="{ row }">{{ String(row.major) }}</template>
         </el-table-column>
+        <el-table-column prop="rating" label="学生评价" min-width="95" sortable>
+          <template slot-scope="{ row }">{{ row.rating || '暂无评价' }}</template>
+        </el-table-column>
+        <el-table-column prop="recordCount" label="指导次数" min-width="95" sortable></el-table-column>
         <el-table-column label="操作" min-width="90">
           <template slot-scope="scope">
             <el-button class="text-button-danger" size="mini" type="text" @click="handleDelete(scope)">删除</el-button>
@@ -78,7 +82,21 @@ export default {
     getTutorsInfo() {
       get("TutorsInfo")
         .then((res) => {
-          this.tutors = res.data
+          const { data } = res
+          const tutors = data.map(tutor => {
+            if (tutor.evaluation.length > 0) {
+              console.log(tutor.evaluation)
+              tutor.rating = (tutor.evaluation.reduce((acc, curr) => {
+                // console.log(acc, curr)
+                return acc + curr.rating
+              }, 0) / tutor.evaluation.length).toFixed(1)
+            } else {
+              tutor.rating = 0
+            }
+            return tutor
+          })
+          this.tutors = tutors
+          console.log(this.tutors)
         })
         .catch((error) => {
           console.log(error)
