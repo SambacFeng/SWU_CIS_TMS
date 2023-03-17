@@ -128,10 +128,14 @@ export default {
           this.form.studentsPresent = studentsPresent
           console.log(this.form)
           // 提交表单代码
-          post('createRecord', this.form)
-            .then(() => {
-              this.$message.success('提交指导记录成功')
-            })
+          post('createRecord', {
+            ...this.form,
+            tutorId: localStorage.getItem('id')
+          }).then(() => {
+            this.$message.success('提交指导记录成功')
+            this.$refs.form.resetFields()
+            this.checkedAll = false
+          })
         } else {
           this.$message.error('请完成所有必填项后再提交')
         }

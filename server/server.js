@@ -363,6 +363,10 @@ app.post('/api/refuse', async (req, res) => {
 app.post('/api/createRecord', async (req, res) => {
   console.log('body', req.body)
   await Record.create(req.body)
+  await Tutor.findOneAndUpdate(
+    { id: req.body.tutorId },
+    { $inc: { recordCount: 1 } }
+  )
   res.send('ok')
 })
 

@@ -107,6 +107,10 @@ const TutorSchema = new mongoose.Schema({
   evaluation: {
     type: [evaluationSchema],
     default: []
+  },
+  recordCount: {
+    type: Number,
+    default: 0
   }
 })
 const Tutor = mongoose.model('Tutor', TutorSchema)
