@@ -13,8 +13,8 @@
           sortable>
           <template slot-scope="{ row }">{{ row.major }}</template>
         </el-table-column>
-        <el-table-column prop="tutorName" label="导师" min-width="80" :filter-method="filterByTutorName" :filters="tutorNameFilters"
-          sortable>
+        <el-table-column prop="tutorName" label="导师" min-width="80" :filter-method="filterByTutorName"
+          :filters="tutorNameFilters" sortable>
           <template slot-scope="{ row }">{{ row.tutorName || row.tutor || '未选择' }}</template>
         </el-table-column>
         <el-table-column label="操作" min-width="90">
@@ -84,7 +84,10 @@ export default {
       handler(students) {
         this.gradeFilters = this.getUniqueFilters(students, 'grade')
         this.majorFilters = this.getUniqueFilters(students, 'major')
-        this.tutorNameFilters = this.getUniqueFilters(students, 'tutorName')
+        this.tutorNameFilters = [
+          ...this.getUniqueFilters(students, 'tutorName'),
+          { text: '未选择', value: "" }
+        ]
       },
       immediate: true // 立即触发，确保在组件挂载后初始化 filters
     }
@@ -157,11 +160,19 @@ export default {
       return !value || row.major.toLowerCase().includes(value.toLowerCase())
     },
     filterByTutorName(value, row) {
-      return !value || row.tutorName.toLowerCase().includes(value.toLowerCase())
+      if (value === '') {
+        return row.tutorName === ''
+      } else {
+        return !value || (row.tutorName && row.tutorName.toLowerCase().includes(value.toLowerCase()))
+      }
     },
     getUniqueFilters(data, key) {
       const set = new Set()
-      data.forEach(item => set.add(item[key]))
+      data.forEach(item => {
+        if (item[key]) {
+          set.add(item[key])
+        }
+      })
       return Array.from(set).map(value => ({ text: value, value }))
     },
     createStudent() {
@@ -211,4 +222,5 @@ export default {
 .text-button-danger:hover,
 .text-button-danger:focus {
   color: #ec5151
-}</style>
+}
+</style>
