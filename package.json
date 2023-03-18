@@ -23,12 +23,8 @@
     "multer": "^1.4.5-lts.1",
     "node-xlsx": "^0.21.0",
     "vue": "^2.6.10",
-    "vue-cropperjs": "^3.0.0",
-    "vue-i18n": "^8.10.0",
-    "vue-quill-editor": "^3.0.6",
     "vue-router": "^3.0.3",
-    "vue-schart": "^2.0.0",
-    "vuedraggable": "^2.17.0"
+    "vue-schart": "^2.0.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.9.0",
