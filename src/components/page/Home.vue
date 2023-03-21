@@ -4,16 +4,11 @@
     <el-divider></el-divider>
     <!-- 管理员 -->
     <template v-if="type === '0'">
-      <span style="height: 30px">您可以：</span>
-      <el-row>
-        <el-col :span="24">
-          <el-row v-for="link in adminLinks" :key="link.id">
-            <el-col :span="24">
-              <el-link class="text-link" type="primary" @click="goToAnotherPage(link.url)">{{ link.text }}</el-link>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
+        <div>
+          <el-card v-for="link in adminLinks" :key="link.id" shadow="hover" @click.native="goToAnotherPage(link.url)">
+            {{ link.text }}
+          </el-card>
+        </div>
     </template>
     <!-- 学生 -->
     <template v-if="type === '1'">
@@ -144,8 +139,8 @@ export default {
 </script>
 
 <style scoped>
-.text-link {
-  height: 25px;
+.container {
+  height: calc(100% - 65px);
 }
 
 .inline-link {
@@ -155,5 +150,17 @@ export default {
 
 .el-message-box__container {
   white-space: pre-wrap;
+}
+
+.el-card {
+  font-size: large;
+  width: 50%;
+  min-width: 480px;
+  margin: 20px 0;
+  border: 1px solid #EAEAEA;
+}
+
+.el-card:hover {
+  color: #409EFF;
 }
 </style>
